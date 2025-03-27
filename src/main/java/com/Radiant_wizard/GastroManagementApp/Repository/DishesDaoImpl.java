@@ -4,6 +4,7 @@ import com.Radiant_wizard.GastroManagementApp.Entity.*;
 import com.Radiant_wizard.GastroManagementApp.Entity.Enum.LogicalOperator;
 import com.Radiant_wizard.GastroManagementApp.Entity.Enum.MovementType;
 import com.Radiant_wizard.GastroManagementApp.Entity.Enum.Unit;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Repository
 public class DishesDaoImpl implements DishesDao {
-    Datasource datasource = new Datasource();
+    private Datasource datasource = new Datasource();
 
     public DishesDaoImpl(Datasource datasource) {
         this.datasource = datasource;

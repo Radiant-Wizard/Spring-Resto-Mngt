@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.SQLException;
 import java.util.List;
 
-@Repository
 public interface DishesDao {
     List<Dish> getAll(int pageSize, int pageNumber);
     List<Dish> getDishesByCriteria(List<Criteria> criteriaList, String orderBy, Boolean ascending, Integer pageSize, Integer pageNumber) throws SQLException;
