@@ -1,8 +1,7 @@
-package com.Radiant_wizard.GastroManagementApp.dao;
+package com.Radiant_wizard.GastroManagementApp.repository;
 
-import com.Radiant_wizard.GastroManagementApp.dao.repository.Datasource;
+import com.Radiant_wizard.GastroManagementApp.configuration.Datasource;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.LogicalOperator;
-import com.Radiant_wizard.GastroManagementApp.entity.Enum.MovementType;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.Unit;
 import com.Radiant_wizard.GastroManagementApp.entity.model.*;
 import com.Radiant_wizard.GastroManagementApp.mapper.DishMapper;

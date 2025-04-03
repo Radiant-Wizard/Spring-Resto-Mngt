@@ -1,12 +1,13 @@
-package com.Radiant_wizard.GastroManagementApp.dao.repository;
+package com.Radiant_wizard.GastroManagementApp.configuration;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@Repository
+@Configuration
 public class Datasource {
     private final String db_user = System.getenv("USERNAME");
     private final String db_user_password = System.getenv("USER_PASSWORD");

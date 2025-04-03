@@ -1,11 +1,10 @@
-package com.Radiant_wizard.GastroManagementApp.dao;
+package com.Radiant_wizard.GastroManagementApp.repository;
 
-import com.Radiant_wizard.GastroManagementApp.dao.repository.Datasource;
+import com.Radiant_wizard.GastroManagementApp.configuration.Datasource;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Criteria;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.LogicalOperator;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.Unit;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient;
-import com.Radiant_wizard.GastroManagementApp.entity.model.Price;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import java.sql.Connection;
@@ -106,6 +105,11 @@ public class IngredientDaoImpl implements  IngredientDao{
             throw  new RuntimeException(e);
         }
         return ingredient;
+    }
+
+    @Override
+    public void save(List<Ingredient> ingredients) {
+
     }
 
 }
