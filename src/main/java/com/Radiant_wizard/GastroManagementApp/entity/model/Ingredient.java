@@ -1,7 +1,8 @@
-package com.Radiant_wizard.GastroManagementApp.Entity;
+package com.Radiant_wizard.GastroManagementApp.entity.model;
 
-import com.Radiant_wizard.GastroManagementApp.Entity.Enum.MovementType;
-import com.Radiant_wizard.GastroManagementApp.Entity.Enum.Unit;
+import com.Radiant_wizard.GastroManagementApp.entity.Enum.MovementType;
+import com.Radiant_wizard.GastroManagementApp.entity.Enum.Unit;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,7 @@ public class Ingredient {
     private final Unit unit;
     private double neededQuantity;
     private final List<Price> unitPrice;
+    @JsonIgnore
     private final List<StockMovement> stockMovements;
 
 
@@ -57,20 +59,14 @@ public class Ingredient {
         }
         return nearestPriceToTheGivenDate;
     }
+    public Price getNearestPrice() {
+        return this.unitPrice.stream().max(Comparator.comparing(Price::getModificationDate)).get();
+    }
+
 
 
     public double getAvailableQuantity(LocalDateTime ofThisDate) {
         LocalDateTime localDateTime = (ofThisDate == null ? LocalDateTime.now(): ofThisDate);
-//        double currentAvailableQuantity = 0.0;
-//        for (StockMovement stockMovement : this.stockMovements) {
-//            if (stockMovement.getMovementDate().isBefore(localDateTime) || stockMovement.getMovementDate().isEqual(localDateTime)) {
-//                if (stockMovement.getMovementType().equals(MovementType.ENTRY)) {
-//                    currentAvailableQuantity += stockMovement.getMovementQuantity();
-//                } else if (stockMovement.getMovementType().equals(MovementType.EXIT)) {
-//                    currentAvailableQuantity -= stockMovement.getMovementQuantity();
-//                }
-//            }
-//        }
         Double totalEntryQuantity = this.stockMovements
                 .stream()
                 .filter(stockMovement -> (stockMovement.getMovementDate().isBefore(localDateTime) || stockMovement.getMovementDate().isEqual(localDateTime)) && stockMovement.getMovementType() == MovementType.ENTRY)
