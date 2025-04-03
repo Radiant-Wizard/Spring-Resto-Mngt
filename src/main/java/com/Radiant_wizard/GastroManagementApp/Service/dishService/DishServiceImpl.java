@@ -1,6 +1,6 @@
 package com.Radiant_wizard.GastroManagementApp.Service.dishService;
 
-import com.Radiant_wizard.GastroManagementApp.dao.DishesDaoImpl;
+import com.Radiant_wizard.GastroManagementApp.repository.DishesDaoImpl;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Dish;
 import org.springframework.beans.factory.annotation.Autowired;
 

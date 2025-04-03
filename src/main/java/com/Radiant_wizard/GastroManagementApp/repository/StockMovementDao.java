@@ -1,4 +1,4 @@
-package com.Radiant_wizard.GastroManagementApp.dao;
+package com.Radiant_wizard.GastroManagementApp.repository;
 
 import com.Radiant_wizard.GastroManagementApp.entity.model.StockMovement;
 

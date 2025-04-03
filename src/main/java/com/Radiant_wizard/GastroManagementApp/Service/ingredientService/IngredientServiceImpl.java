@@ -3,9 +3,8 @@ package com.Radiant_wizard.GastroManagementApp.Service.ingredientService;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.LogicalOperator;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Criteria;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient;
-import com.Radiant_wizard.GastroManagementApp.dao.IngredientDaoImpl;
+import com.Radiant_wizard.GastroManagementApp.repository.IngredientDaoImpl;
 import com.Radiant_wizard.GastroManagementApp.entity.model.IngredientResponseEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
