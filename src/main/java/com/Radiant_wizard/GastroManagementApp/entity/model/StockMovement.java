@@ -1,7 +1,7 @@
-package com.Radiant_wizard.GastroManagementApp.Entity;
+package com.Radiant_wizard.GastroManagementApp.entity.model;
 
-import com.Radiant_wizard.GastroManagementApp.Entity.Enum.MovementType;
-import com.Radiant_wizard.GastroManagementApp.Entity.Enum.Unit;
+import com.Radiant_wizard.GastroManagementApp.entity.Enum.MovementType;
+import com.Radiant_wizard.GastroManagementApp.entity.Enum.Unit;
 import lombok.Getter;
 import lombok.Setter;
 

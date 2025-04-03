@@ -1,4 +1,4 @@
-package com.Radiant_wizard.GastroManagementApp.Entity;
+package com.Radiant_wizard.GastroManagementApp.entity.model;
 
 import lombok.Getter;
 import lombok.Setter;

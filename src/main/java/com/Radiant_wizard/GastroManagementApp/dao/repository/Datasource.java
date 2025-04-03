@@ -1,4 +1,4 @@
-package com.Radiant_wizard.GastroManagementApp.Repository;
+package com.Radiant_wizard.GastroManagementApp.dao.repository;
 
 import org.springframework.stereotype.Repository;
 

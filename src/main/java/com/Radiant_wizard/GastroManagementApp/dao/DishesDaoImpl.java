@@ -1,9 +1,11 @@
-package com.Radiant_wizard.GastroManagementApp.Repository;
+package com.Radiant_wizard.GastroManagementApp.dao;
 
-import com.Radiant_wizard.GastroManagementApp.Entity.*;
-import com.Radiant_wizard.GastroManagementApp.Entity.Enum.LogicalOperator;
-import com.Radiant_wizard.GastroManagementApp.Entity.Enum.MovementType;
-import com.Radiant_wizard.GastroManagementApp.Entity.Enum.Unit;
+import com.Radiant_wizard.GastroManagementApp.dao.repository.Datasource;
+import com.Radiant_wizard.GastroManagementApp.entity.Enum.LogicalOperator;
+import com.Radiant_wizard.GastroManagementApp.entity.Enum.MovementType;
+import com.Radiant_wizard.GastroManagementApp.entity.Enum.Unit;
+import com.Radiant_wizard.GastroManagementApp.entity.model.*;
+import com.Radiant_wizard.GastroManagementApp.mapper.DishMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,49 +19,12 @@ import java.util.List;
 
 @Repository
 public class DishesDaoImpl implements DishesDao {
-    private Datasource datasource = new Datasource();
-
+    private final Datasource datasource;
+    @Autowired
+    private StockMovementDaoImpl stockMovementDao;
+    private DishMapper dishMapper;
     public DishesDaoImpl(Datasource datasource) {
         this.datasource = datasource;
-    }
-
-    private List<Dish> convertDishesTableRows(ResultSet resultSet, List<Ingredient> ingredients) throws SQLException, IllegalAccessException {
-        List<Dish> dishes = new ArrayList<>();
-
-        while (resultSet.next()) {
-            dishes.add(new Dish(
-                    resultSet.getLong("dish_id"),
-                    resultSet.getString("dish_name"),
-                    resultSet.getInt("dish_price"),
-                    ingredients
-            ));
-        }
-        return dishes;
-    }
-
-
-    private List<StockMovement> getStockForIngredient(long ingredientId) {
-        List<StockMovement> stockList = new ArrayList<>();
-        String sql = "SELECT ingredient_id, movement_date, movement_type, quantity, unit from stock_movement where ingredient_id = ?";
-
-        try (Connection connection = datasource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, ingredientId);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    stockList.add(new StockMovement(
-                            ingredientId,
-                            resultSet.getDouble("quantity"),
-                            Unit.valueOf(resultSet.getString("unit")),
-                            MovementType.valueOf(resultSet.getString("movement_type")),
-                            resultSet.getObject("movement_date", LocalDateTime.class)
-                    ));
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return stockList;
     }
 
     private List<Price> getPricesForIngredient(long ingredientId) {
@@ -102,7 +67,7 @@ public class DishesDaoImpl implements DishesDao {
                             resultSet.getObject("last_modification", LocalDateTime.class),
                             Unit.valueOf(resultSet.getString("unit")),
                             getPricesForIngredient(ingredientId),
-                            getStockForIngredient(ingredientId),
+                            stockMovementDao.getStockByIngredientId(ingredientId),
                             resultSet.getDouble("quantity")
                     );
                     ingredients.add(ingredient);
@@ -198,7 +163,7 @@ public class DishesDaoImpl implements DishesDao {
         ) {
             preparedStatement.setLong(1, dishId);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                dish = convertDishesTableRows(resultSet, getIngredientForDishes(dishId)).getFirst();
+                dish = dishMapper.resultSetToDish(resultSet, getIngredientForDishes(dishId)).getFirst();
             }
         }
         return dish;

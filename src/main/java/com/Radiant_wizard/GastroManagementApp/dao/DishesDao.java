@@ -1,8 +1,7 @@
-package com.Radiant_wizard.GastroManagementApp.Repository;
+package com.Radiant_wizard.GastroManagementApp.dao;
 
-import com.Radiant_wizard.GastroManagementApp.Entity.Criteria;
-import com.Radiant_wizard.GastroManagementApp.Entity.Dish;
-import org.springframework.stereotype.Repository;
+import com.Radiant_wizard.GastroManagementApp.entity.model.Criteria;
+import com.Radiant_wizard.GastroManagementApp.entity.model.Dish;
 
 import java.sql.SQLException;
 import java.util.List;

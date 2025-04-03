@@ -1,6 +1,6 @@
-package com.Radiant_wizard.GastroManagementApp.Entity;
+package com.Radiant_wizard.GastroManagementApp.entity.model;
 
-import com.Radiant_wizard.GastroManagementApp.Entity.Enum.LogicalOperator;
+import com.Radiant_wizard.GastroManagementApp.entity.Enum.LogicalOperator;
 import lombok.Getter;
 
 @Getter
