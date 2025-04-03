@@ -1,5 +1,6 @@
-package com.Radiant_wizard.GastroManagementApp.Entity;
+package com.Radiant_wizard.GastroManagementApp.entity.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ public class Dish {
     private final Long dishId;
     private final String dishName;
     private final Integer price;
+    @JsonIgnore
     private final List<Ingredient> ingredients;
 
     public Dish(Long dishId, String dishName, Integer price, List<Ingredient> ingredients) throws IllegalAccessException {
