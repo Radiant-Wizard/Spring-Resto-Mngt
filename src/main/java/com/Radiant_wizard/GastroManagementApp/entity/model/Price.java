@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class Price {
-    LocalDateTime modificationDate;
-    Double value;
+    private LocalDateTime modificationDate;
+    private Double value;
 
     public Price(LocalDateTime modificationDate, Double value) {
         this.modificationDate = modificationDate;

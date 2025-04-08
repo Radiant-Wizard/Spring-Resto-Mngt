@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Setter
 public class StockMovement {
     private final long ingredientId;
-    private long stockMovementId;
     private final double movementQuantity;
     private final MovementType movementType;
     private final LocalDateTime movementDate;
@@ -25,15 +24,5 @@ public class StockMovement {
         this.movementDate = movementDate;
         this.unit = unit;
     }
-
-    public StockMovement(long stockMovementId, long ingredientId, double movementQuantity, Unit unit, MovementType movementType, LocalDateTime movementDate) {
-        this.stockMovementId = stockMovementId;
-        this.ingredientId = ingredientId;
-        this.movementQuantity = movementQuantity;
-        this.unit = unit;
-        this.movementType = movementType;
-        this.movementDate = movementDate;
-    }
-
 }
 

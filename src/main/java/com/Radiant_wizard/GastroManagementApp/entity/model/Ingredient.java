@@ -2,7 +2,6 @@ package com.Radiant_wizard.GastroManagementApp.entity.model;
 
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.MovementType;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.Unit;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,27 +15,23 @@ import java.util.List;
 public class Ingredient {
     private final Long ingredientId;
     private final String ingredientName;
-    private final LocalDateTime lastModification;
     private final Unit unit;
     private double neededQuantity;
     private final List<Price> unitPrice;
-    @JsonIgnore
     private final List<StockMovement> stockMovements;
 
 
-    public Ingredient(Long ingredientId, String ingredientName, LocalDateTime lastModification, Unit unit, List<Price> unitPrice, List<StockMovement> stockMovements) {
+    public Ingredient(Long ingredientId, String ingredientName,Unit unit, List<Price> unitPrice, List<StockMovement> stockMovements) {
         this.ingredientId = ingredientId;
         this.ingredientName = ingredientName;
-        this.lastModification = lastModification;
         this.unit = unit;
         this.unitPrice = unitPrice;
         this.stockMovements = stockMovements;
     }
 
-    public Ingredient(Long ingredientId, String ingredientName, LocalDateTime lastModification, Unit unit, List<Price> unitPrice, List<StockMovement> stockMovements, double neededQuantity) {
+    public Ingredient(Long ingredientId, String ingredientName, Unit unit, List<Price> unitPrice, List<StockMovement> stockMovements, double neededQuantity) {
         this.ingredientId = ingredientId;
         this.ingredientName = ingredientName;
-        this.lastModification = lastModification;
         this.unit = unit;
         this.unitPrice = unitPrice;
         this.neededQuantity = neededQuantity;
@@ -59,22 +54,26 @@ public class Ingredient {
         }
         return nearestPriceToTheGivenDate;
     }
+
     public Price getNearestPrice() {
         return this.unitPrice.stream().max(Comparator.comparing(Price::getModificationDate)).get();
     }
 
+    public LocalDateTime getLastModificationDate() {
+        return this.unitPrice.stream().max(Comparator.comparing(Price::getModificationDate)).get().getModificationDate();
+    }
 
 
     public double getAvailableQuantity(LocalDateTime ofThisDate) {
         LocalDateTime localDateTime = (ofThisDate == null ? LocalDateTime.now(): ofThisDate);
         Double totalEntryQuantity = this.stockMovements
                 .stream()
-                .filter(stockMovement -> (stockMovement.getMovementDate().isBefore(localDateTime) || stockMovement.getMovementDate().isEqual(localDateTime)) && stockMovement.getMovementType() == MovementType.ENTRY)
+                .filter(stockMovement -> (stockMovement.getMovementDate().isBefore(localDateTime) || stockMovement.getMovementDate().isEqual(localDateTime)) && stockMovement.getMovementType() == MovementType.IN)
                 .map(StockMovement::getMovementQuantity)
                 .reduce(0.0, Double::sum);
         Double totalExitQuantity = this.stockMovements
                 .stream()
-                .filter(stockMovement -> (stockMovement.getMovementDate().isBefore(localDateTime) || stockMovement.getMovementDate().isEqual(localDateTime)) && stockMovement.getMovementType() == MovementType.EXIT)
+                .filter(stockMovement -> (stockMovement.getMovementDate().isBefore(localDateTime) || stockMovement.getMovementDate().isEqual(localDateTime)) && stockMovement.getMovementType() == MovementType.OUT)
                 .map(StockMovement::getMovementQuantity)
                 .reduce(0.0, Double::sum);
         return totalEntryQuantity - totalExitQuantity;
@@ -83,12 +82,12 @@ public class Ingredient {
     public double getAvailableQuantity(){
         Double totalEntryQuantity = this.stockMovements
                 .stream()
-                .filter(stockMovement -> stockMovement.getMovementType() == MovementType.ENTRY)
+                .filter(stockMovement -> stockMovement.getMovementType() == MovementType.IN)
                 .map(StockMovement::getMovementQuantity)
                 .reduce(0.0, Double::sum);
         Double totalExitQuantity = this.stockMovements
                 .stream()
-                .filter(stockMovement ->  stockMovement.getMovementType() == MovementType.EXIT)
+                .filter(stockMovement ->  stockMovement.getMovementType() == MovementType.OUT)
                 .map(StockMovement::getMovementQuantity)
                 .reduce(0.0, Double::sum);
         return totalEntryQuantity - totalExitQuantity;
