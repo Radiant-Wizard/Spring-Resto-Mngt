@@ -1,16 +1,14 @@
 package com.Radiant_wizard.GastroManagementApp.repository;
 
 import com.Radiant_wizard.GastroManagementApp.configuration.Datasource;
+import com.Radiant_wizard.GastroManagementApp.entity.DTO.ingredient.Ingredient;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Criteria;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.LogicalOperator;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.Unit;
-import com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,21 +19,23 @@ public class IngredientDaoImpl implements  IngredientDao{
     private final Datasource datasource;
 
     @Autowired
-    private PriceDaoImpl priceDao;
+    private final PriceDaoImpl priceDao;
 
     @Autowired
-    private StockMovementDaoImpl stockMovementDao;
+    private final StockMovementDaoImpl stockMovementDao;
 
-    public IngredientDaoImpl(Datasource datasource) {
+    public IngredientDaoImpl(Datasource datasource, PriceDaoImpl priceDao, StockMovementDaoImpl stockMovementDao) {
         this.datasource = datasource;
+        this.priceDao = priceDao;
+        this.stockMovementDao = stockMovementDao;
     }
 
     @Override
-    public List<Ingredient> getIngredientByCriteria(List<Criteria> criteriaList, String orderBy, Boolean ascending, Integer pageSize, Integer pageNumber) throws SQLException {
-        List<Ingredient> ingredients = new ArrayList<>();
+    public List<com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient> getIngredientByCriteria(List<Criteria> criteriaList, String orderBy, Boolean ascending, Integer pageSize, Integer pageNumber) throws SQLException {
+        List<com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient> ingredients = new ArrayList<>();
 
-        String query =
-                "SELECT ingredient_id, ingredient_name, last_modification, unit_price, unit from ingredients where 1=1";
+        StringBuilder query =
+                new StringBuilder("SELECT ingredient_id, ingredient_name, unit from ingredients where 1=1");
 
         for (Criteria criteria : criteriaList) {
             String columnName = criteria.getColumnName();
@@ -43,59 +43,58 @@ public class IngredientDaoImpl implements  IngredientDao{
             String operator = criteria.getOperator();
             LogicalOperator logicalOperator = criteria.getLogicalOperator();
 
-            query += " " + logicalOperator.toString() + " " ;
+            query.append(" ").append(logicalOperator.toString()).append(" ");
             if ("BETWEEN".equalsIgnoreCase(operator)){
                 Object secondValue = criteria.getSecondValue();
-                query += String.format(" %s BETWEEN '%s' AND '%s' ", columnName, columnValue, secondValue);
+                query.append(String.format(" %s BETWEEN '%s' AND '%s' ", columnName, columnValue, secondValue));
             }else if("LIKE".equalsIgnoreCase(operator)){
-                query += columnName + " ILIKE '%"+ columnValue + "%' ";
+                query.append(columnName).append(" ILIKE '%").append(columnValue).append("%' ");
             } else {
-                query += String.format(" %s %s %s ", columnName, operator, columnValue);
+                query.append(String.format(" %s %s %s ", columnName, operator, columnValue));
             }
         }
 
         if (orderBy != null && !orderBy.isEmpty()) {
-            query += " ORDER BY " + orderBy + (ascending ? " ASC " : " DESC ");
+            query.append(" ORDER BY ").append(orderBy).append(ascending ? " ASC " : " DESC ");
         }
         if (pageSize != null && pageNumber != null) {
             int offset = pageSize * (pageNumber - 1);
-            query += " LIMIT " + pageSize + " OFFSET " + offset;
+            query.append(" LIMIT ").append(pageSize).append(" OFFSET ").append(offset);
         }
 
         try (Connection connection = datasource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);
+             PreparedStatement statement = connection.prepareStatement(query.toString());
              ResultSet resultSet = statement.executeQuery()
         ) {
             while (resultSet.next()) {
                 long ingredientId = resultSet.getLong("ingredient_id");
 
-                ingredients.add(new Ingredient(
+                ingredients.add(new com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient(
                         resultSet.getLong("ingredient_id"),
                         resultSet.getString("ingredient_name"),
-                        resultSet.getObject("last_modification", LocalDateTime.class),
                         Unit.valueOf(resultSet.getString("unit")),
                         priceDao.getPriceByIngredientID(ingredientId),
                         stockMovementDao.getStockByIngredientId(ingredientId)
                 ));
+
             }
         }
         return ingredients;
     }
 
     @Override
-    public Ingredient getIngredientById(long id) {
-        String query = "SELECT ingredient_id, ingredient_name, last_modification, unit_price, unit from ingredients where ingredient_id = ? ";
-        Ingredient ingredient = null;
+    public com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient getIngredientById(long id) {
+        String query = "SELECT ingredient_id, ingredient_name, unit from ingredients where ingredient_id = ? ";
+        com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient ingredient = null;
         try (Connection connection = datasource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);
+             PreparedStatement statement = connection.prepareStatement(query)
         ) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                ingredient = new Ingredient(
+                ingredient = new com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient(
                         resultSet.getLong("ingredient_id"),
                         resultSet.getString("ingredient_name"),
-                        resultSet.getObject("last_modification", LocalDateTime.class),
                         Unit.valueOf(resultSet.getString("unit")),
                         priceDao.getPriceByIngredientID(id),
                         stockMovementDao.getStockByIngredientId(id)
@@ -108,8 +107,49 @@ public class IngredientDaoImpl implements  IngredientDao{
     }
 
     @Override
-    public void save(List<Ingredient> ingredients) {
+    public com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient getIngredientByName(String name) {
+        String query =
+                "SELECT ingredient_id, ingredient_name, unit from ingredients where ingredient_name = ? ";
+        com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient ingredient = null;
+        try (Connection connection = datasource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)
+        ) {
+            statement.setString(1, name);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                ingredient = new com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient(
+                        resultSet.getLong("ingredient_id"),
+                        resultSet.getString("ingredient_name"),
+                        Unit.valueOf(resultSet.getString("unit")),
+                        priceDao.getPriceByIngredientID(resultSet.getLong("ingredient_id")),
+                        stockMovementDao.getStockByIngredientId(resultSet.getLong("ingredient_id"))
+                );
+            }
+        } catch (SQLException e){
+            throw  new RuntimeException(e);
+        }
+        System.out.println(ingredient);
+        return ingredient;
+    }
 
+    @Override
+    public void save(List<Ingredient> ingredients) {
+        String sql = "INSERT INTO ingredients (ingredient_id, ingredient_name, last_modification, unit_price, unit) VALUES(?, ?, ?::timestamp, ?, ?::measurement_unit)";
+
+        try (Connection connection = datasource.getConnection()){
+            ingredients.forEach(ingredient -> {
+                try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+                    preparedStatement.setLong(1, ingredient.getId());
+                    preparedStatement.setString(2, ingredient.getName());
+                    preparedStatement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+                    preparedStatement.setDouble(4, ingredient.getActualPrice());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

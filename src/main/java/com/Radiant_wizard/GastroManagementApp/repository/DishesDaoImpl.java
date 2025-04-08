@@ -63,7 +63,6 @@ public class DishesDaoImpl implements DishesDao {
                     Ingredient ingredient = new Ingredient(
                             resultSet.getLong("ingredient_id"),
                             resultSet.getString("ingredient_name"),
-                            resultSet.getObject("last_modification", LocalDateTime.class),
                             Unit.valueOf(resultSet.getString("unit")),
                             getPricesForIngredient(ingredientId),
                             stockMovementDao.getStockByIngredientId(ingredientId),

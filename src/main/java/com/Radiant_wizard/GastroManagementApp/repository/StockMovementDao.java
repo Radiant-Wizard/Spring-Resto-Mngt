@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface StockMovementDao {
     List<StockMovement> getStockByIngredientId(long ingredientId);
+    void save(List<StockMovement> stockMovements);
 }

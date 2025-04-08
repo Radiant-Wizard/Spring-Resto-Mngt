@@ -1,7 +1,7 @@
 package com.Radiant_wizard.GastroManagementApp.Controller;
 
-import com.Radiant_wizard.GastroManagementApp.entity.model.Dish;
-import com.Radiant_wizard.GastroManagementApp.Service.dishService.DishService;
+import com.Radiant_wizard.GastroManagementApp.Service.Dish.DishService;
+import com.Radiant_wizard.GastroManagementApp.entity.DTO.dish.Dish;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ public class DishController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Dish>> getPing(@RequestParam(required = false, defaultValue = "10") int pageSize
+    public ResponseEntity<List<com.Radiant_wizard.GastroManagementApp.entity.DTO.dish.Dish>> getPing(@RequestParam(required = false, defaultValue = "10") int pageSize
             , @RequestParam(required = false, defaultValue = "1") int pageNumber) {
         List<Dish> dishes;
         try {
@@ -30,4 +30,5 @@ public class DishController {
             throw new RuntimeException(e);
         }
     }
+
 }

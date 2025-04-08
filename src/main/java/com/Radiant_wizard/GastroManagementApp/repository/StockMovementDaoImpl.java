@@ -45,4 +45,10 @@ public class StockMovementDaoImpl implements StockMovementDao{
         }
         return stockList;
     }
+
+    @Override
+    public void save(List<StockMovement> stockMovements) {
+        String sql =
+                "INSERT INTO stock_movement (ingredient_id, movement_type, quantity, unit, movement_date) VALUES(?, ?::stock_movement_type, ?, ?:: measurement_unit, ?::timestamp)";
+    }
 }
