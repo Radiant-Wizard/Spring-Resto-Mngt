@@ -1,4 +1,4 @@
-create type stock_movement_type as ENUM('ENTRY', 'EXIT');
+create type stock_movement_type as ENUM('IN', 'OUT');
 
 create table stock_movement(
     stock_movement_id BIGSERIAL primary key,
