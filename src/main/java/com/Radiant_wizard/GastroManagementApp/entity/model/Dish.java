@@ -37,7 +37,6 @@ public class Dish {
         for (Ingredient ingredient : ingredients) {
             Double nearestValue = ingredient.getNearestPrice(dateTime).getValue();
             cost += (ingredient.getNeededQuantity() * nearestValue);
-//            System.out.println(ingredient.getIngredientName() + " : " + ingredient.getNeededQuantity() + " : " + (ingredient.getNeededQuantity() * nearestValue));
         }
         return cost;
     }
@@ -50,13 +49,6 @@ public class Dish {
     }
 
     public Double getAvailableQuantity(LocalDateTime localDateTime) {
-//        double smallestAvailableDishQuantity = Double.MAX_VALUE;
-//        for (Ingredient ingredient : this.ingredients) {
-//            double availableDishMade = Math.round(ingredient.getAvailableQuantity(usedDate) / ingredient.getNeededQuantity());
-//            if (availableDishMade < smallestAvailableDishQuantity) {
-//                smallestAvailableDishQuantity = availableDishMade;
-//            }
-//        }
         return this.ingredients
                 .stream()
                 .mapToDouble(ingredient -> (Math.round(ingredient.getAvailableQuantity(localDateTime) / ingredient.getNeededQuantity())))
