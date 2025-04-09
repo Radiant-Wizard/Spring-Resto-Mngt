@@ -5,6 +5,7 @@ import com.Radiant_wizard.GastroManagementApp.entity.Enum.StatusType;
 import com.Radiant_wizard.GastroManagementApp.entity.model.DishOrder;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -16,21 +17,26 @@ import java.util.List;
 
 @Repository
 public class DishOrderDaoImpl implements DishOrderDao{
-    @Autowired
-    Datasource datasource;
-    @Autowired
-    DishesDaoImpl dishesDao;
-    @Autowired
-    StatusDaoImpl statusDao;
-    @Autowired
-    OrderDaoImpl orderDao;
+    private final Datasource datasource;
+    private final DishesDaoImpl dishesDao;
+    private final StatusDaoImpl statusDao;
+    private final OrderDaoImpl orderDao;
 
-    public DishOrderDaoImpl(Datasource datasource){
+    @Autowired
+    public DishOrderDaoImpl(
+            Datasource datasource,
+            DishesDaoImpl dishesDao,
+            StatusDaoImpl statusDao,
+            @Lazy OrderDaoImpl orderDao
+    ) {
         this.datasource = datasource;
+        this.dishesDao = dishesDao;
+        this.statusDao = statusDao;
+        this.orderDao = orderDao;
     }
 
 
-    private long findOrderId(long orderDishId) {
+    private long findOrderId(long orderDishId){
         String sql = "SELECT (order_dish_id, dish_id, order_id, ordered_dish_quantity) from order_dish where order_dish_id = ?";
         long orderId = 0;
 

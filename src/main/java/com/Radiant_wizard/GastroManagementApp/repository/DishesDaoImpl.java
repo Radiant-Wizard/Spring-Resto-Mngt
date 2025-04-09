@@ -19,17 +19,23 @@ import java.util.List;
 @Repository
 public class DishesDaoImpl implements DishesDao {
     private final Datasource datasource;
-    @Autowired
-    private StockMovementDaoImpl stockMovementDao;
-    private DishMapper dishMapper;
-    public DishesDaoImpl(Datasource datasource) {
-        this.datasource = datasource;
-    }
+    private final StockMovementDaoImpl stockMovementDao;
+    private final DishMapper dishMapper;
 
+    @Autowired
+    public DishesDaoImpl(
+            Datasource datasource,
+            StockMovementDaoImpl stockMovementDao,
+            DishMapper dishMapper
+    ) {
+        this.datasource = datasource;
+        this.stockMovementDao = stockMovementDao;
+        this.dishMapper = dishMapper;
+    }
     private List<Price> getPricesForIngredient(long ingredientId) {
         List<Price> prices = new ArrayList<>();
         String sqlForPrice =
-                "select ingredient_id, last_modification, unit_price from ingredients where ingredient_id = ?";
+                "select ingredient_id, last_modification, unit_price from prices where ingredient_id = ?";
 
         try (Connection connection = datasource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlForPrice)) {

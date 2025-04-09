@@ -4,6 +4,7 @@ import com.Radiant_wizard.GastroManagementApp.configuration.Datasource;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.StatusType;
 import com.Radiant_wizard.GastroManagementApp.entity.model.DishOrder;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Order;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -12,17 +13,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OrderDaoImpl implements OrderDao{
-    Datasource datasource;
-    DishOrderDaoImpl dishOrderDao;
-    StatusDaoImpl statusDao;
+    private final Datasource datasource;
+    private final DishOrderDaoImpl dishOrderDao;
+    private final StatusDaoImpl statusDao;
 
-    public OrderDaoImpl(Datasource datasource) {
+    @Autowired
+    public OrderDaoImpl(
+            Datasource datasource,
+            DishOrderDaoImpl dishOrderDao,
+            StatusDaoImpl statusDao
+    ) {
         this.datasource = datasource;
-        this.dishOrderDao = new DishOrderDaoImpl(datasource);
-        this.statusDao = new StatusDaoImpl(datasource);
+        this.dishOrderDao = dishOrderDao;
+        this.statusDao = statusDao;
     }
 
     @Override
@@ -54,26 +61,26 @@ public class OrderDaoImpl implements OrderDao{
     }
 
     @Override
-    public Order getByReference(String reference) {
+    public Optional<Order> getByReference(String reference) {
         String query = "SELECT order_id, order_reference from orders where order_reference ILIKE ?";
-        Order order = null;
         try (Connection connection = datasource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)
         ) {
             preparedStatement.setString(1, "%" + reference + "%");
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                order = new Order(
+            if (resultSet.next()) {
+                Order order = new Order(
                         resultSet.getLong("order_id"),
                         resultSet.getString("order_reference")
                 );
                 order.setOrderedDish(dishOrderDao.getDishOrdersByOrderId(resultSet.getLong("order_id")));
                 order.setStatus(statusDao.getStatusForOrder(resultSet.getLong("order_id")));
+                return Optional.of(order);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return order;
+        return Optional.empty();
     }
 
     @Override
