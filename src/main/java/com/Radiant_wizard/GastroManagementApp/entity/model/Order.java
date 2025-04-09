@@ -1,16 +1,23 @@
 package com.Radiant_wizard.GastroManagementApp.entity.model;
 
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.StatusType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Comparator;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@ToString
 public class Order {
     private final long orderID;
     private final String reference;
     private List<DishOrder> orderedDish;
+    @JsonIgnore
     private List<Status> status;
 
     public Order(long orderID, String reference) {
@@ -32,28 +39,29 @@ public class Order {
         return true;
     }
 
-    public StatusType getActualStatus(){
+    public StatusType getActualStatus() {
         return status
                 .stream()
                 .max(Comparator.comparing(Status::getCreationDate))
-                .get()
-                .getStatusType();
+                .map(Status::getStatusType)
+                .orElse(null); // Safe: returns null if the list is empty
     }
 
-    public void addDishToOrder(List<DishOrder> dishOrder){
+
+    public void addDishToOrder(List<DishOrder> dishOrder) {
         setOrderedDish(dishOrder);
     }
 
-    public Double getTotalAmount(){
+    public Double getTotalAmount() {
         return this.orderedDish
                 .stream()
                 .mapToDouble(dish -> (dish.getCommendedDish().getPrice() * dish.getDishQuantityCommanded()))
-                .reduce(0.0, Double::sum );
+                .reduce(0.0, Double::sum);
     }
 
-    public boolean allTheDishesFinished(){
-        for (DishOrder dishOrder : this.orderedDish){
-            if (dishOrder.getActualStatus() != StatusType.FINISHED){
+    public boolean allTheDishesFinished() {
+        for (DishOrder dishOrder : this.orderedDish) {
+            if (dishOrder.getActualStatus() != StatusType.FINISHED) {
                 return false;
             }
         }
