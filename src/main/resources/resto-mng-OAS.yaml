@@ -173,11 +173,6 @@ paths:
             schema:
               type: object
               properties:
-                status:
-                  type: string
-                  enum:
-                    - CREATED
-                    - CONFIRMED
                 dishes:
                   type: array
                   items:

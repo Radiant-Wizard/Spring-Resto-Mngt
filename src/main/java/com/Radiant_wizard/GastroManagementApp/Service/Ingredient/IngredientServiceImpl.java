@@ -1,31 +1,42 @@
 package com.Radiant_wizard.GastroManagementApp.Service.Ingredient;
 
+import com.Radiant_wizard.GastroManagementApp.entity.DTO.stockMovement.StockMovementDto;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.LogicalOperator;
+import com.Radiant_wizard.GastroManagementApp.entity.Enum.MovementType;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Criteria;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Price;
+import com.Radiant_wizard.GastroManagementApp.entity.model.StockMovement;
 import com.Radiant_wizard.GastroManagementApp.mapper.IngredientMapper;
-import com.Radiant_wizard.GastroManagementApp.repository.IngredientDaoImpl;
+import com.Radiant_wizard.GastroManagementApp.mapper.StockMovementMapper;
+import com.Radiant_wizard.GastroManagementApp.repository.ingredient.IngredientDaoImpl;
 import com.Radiant_wizard.GastroManagementApp.entity.DTO.ingredient.Ingredient;
-import com.Radiant_wizard.GastroManagementApp.repository.PriceDaoImpl;
+import com.Radiant_wizard.GastroManagementApp.repository.price.PriceDaoImpl;
+import com.Radiant_wizard.GastroManagementApp.repository.stockMovement.StockMovementDaoImpl;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class IngredientServiceImpl {
+public class IngredientServiceImpl implements IngredientService {
     private final IngredientDaoImpl ingredientDao;
     private final PriceDaoImpl priceDao;
+    private final StockMovementDaoImpl stockMovementDao;
     private final IngredientMapper ingredientMapper;
+    private final StockMovementMapper stockMovementMapper;
 
-    public IngredientServiceImpl(IngredientDaoImpl ingredientDao, PriceDaoImpl priceDao, IngredientMapper ingredientMapper) {
+    public IngredientServiceImpl(IngredientDaoImpl ingredientDao, PriceDaoImpl priceDao, StockMovementDaoImpl stockMovementDao, IngredientMapper ingredientMapper, StockMovementMapper stockMovementMapper) {
         this.ingredientDao = ingredientDao;
         this.priceDao = priceDao;
+        this.stockMovementDao = stockMovementDao;
         this.ingredientMapper = ingredientMapper;
+        this.stockMovementMapper = stockMovementMapper;
     }
 
+    @Override
     public List<Ingredient> getIngredientsByCriteria(Double priceMin, Double priceMax, String ingredientName, Double unitPrice,
                                                      String operator, String orderBy, Boolean ascending, Integer pageSize, Integer pageNumber) throws SQLException {
 
@@ -56,6 +67,7 @@ public class IngredientServiceImpl {
                 .map(ingredientMapper::ingredientToIngredientDto).collect(Collectors.toList());
     }
 
+    @Override
     public Ingredient getIngredientById(long ingredientID) throws NoSuchFieldException {
         com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient ingredient = ingredientDao.getIngredientById(ingredientID);
         if (ingredient == null) {
@@ -64,6 +76,7 @@ public class IngredientServiceImpl {
         return ingredientMapper.ingredientToIngredientDto(ingredient);
     }
 
+    @Override
     public Ingredient getIngredientByName(String name) throws NoSuchFieldException {
         com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient ingredient = ingredientDao.getIngredientByName(name);
         System.out.println(name + " getIngredientByName name");
@@ -83,5 +96,21 @@ public class IngredientServiceImpl {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void addStockMovement(List<StockMovementDto> stockMovements, long ingredientId) {
+        try {
+            com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient ingredient = ingredientDao.getIngredientById(ingredientId);
+            for (StockMovementDto stockMovementDto : stockMovements){
+                if (stockMovementDto.getMovementType() == MovementType.OUT && ingredient.getAvailableQuantity(LocalDateTime.now()) < stockMovementDto.getMovementQuantity()){
+                    throw new RuntimeException("Not enough available quantity for that transaction");
+                }
+            }
+            stockMovementDao.save(stockMovements, ingredientId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

@@ -11,4 +11,5 @@ public class DishIngredient {
     private Double requireQuantity;
     private Unit unit;
     private IngredientBasicProperty ingredient;
+    private Double availableQuantity;
 }

@@ -59,7 +59,7 @@ public class Dish {
     public Double getAvailableQuantity() {
         return this.ingredients
                 .stream()
-                .mapToDouble(ingredient -> (Math.round(ingredient.getAvailableQuantity() / ingredient.getNeededQuantity())))
+                .mapToDouble(ingredient -> (Math.round(ingredient.getAvailableQuantity(LocalDateTime.now()) / ingredient.getNeededQuantity())))
                 .min()
                 .orElse(0);
     }

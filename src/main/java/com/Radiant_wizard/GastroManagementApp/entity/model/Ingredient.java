@@ -85,11 +85,13 @@ public class Ingredient {
                 .filter(stockMovement -> stockMovement.getMovementType() == MovementType.IN)
                 .map(StockMovement::getMovementQuantity)
                 .reduce(0.0, Double::sum);
+
         Double totalExitQuantity = this.stockMovements
                 .stream()
                 .filter(stockMovement ->  stockMovement.getMovementType() == MovementType.OUT)
                 .map(StockMovement::getMovementQuantity)
                 .reduce(0.0, Double::sum);
+
         return totalEntryQuantity - totalExitQuantity;
     }
 

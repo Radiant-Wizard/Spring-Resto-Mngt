@@ -2,7 +2,10 @@ package com.Radiant_wizard.GastroManagementApp.Controller;
 
 import com.Radiant_wizard.GastroManagementApp.Service.Ingredient.IngredientServiceImpl;
 import com.Radiant_wizard.GastroManagementApp.entity.DTO.ingredient.Ingredient;
+import com.Radiant_wizard.GastroManagementApp.entity.DTO.stockMovement.StockMovementDto;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Price;
+import com.Radiant_wizard.GastroManagementApp.entity.model.StockMovement;
+import com.Radiant_wizard.GastroManagementApp.repository.ingredient.IngredientDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/ingredients")
 public class IngredientController {
+    @Autowired
+    IngredientDaoImpl ingredientDao;
     @Autowired
     IngredientServiceImpl ingredientService;
 
@@ -49,6 +54,15 @@ public class IngredientController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+    @GetMapping("/{id}/stockMovements")
+    public ResponseEntity<Object> getStock(@PathVariable("id") long ingredientId) {
+        try {
+            List<StockMovement> stockMovements =  ingredientDao.getIngredientById(ingredientId).getStockMovements();
+            return ResponseEntity.ok(stockMovements);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
 
     @PutMapping("/{id}/price")
@@ -57,6 +71,17 @@ public class IngredientController {
             Ingredient ingredient = ingredientService.updatePrice(prices, ingredientId);
 
             return ResponseEntity.ok(ingredient);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error has occurred : " + e);
+        }
+    }
+
+    @PutMapping("/{id}/stockMovements")
+    public ResponseEntity<Object> updateStock(@PathVariable("id") long ingredientId,
+                                              @RequestBody List<StockMovementDto> stockMovements){
+        try {
+            ingredientService.addStockMovement(stockMovements, ingredientId);
+            return ResponseEntity.ok("updated");
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error has occurred : " + e);
         }

@@ -1,23 +1,22 @@
-package com.Radiant_wizard.GastroManagementApp.repository;
+package com.Radiant_wizard.GastroManagementApp.repository.stockMovement;
 
 import com.Radiant_wizard.GastroManagementApp.configuration.Datasource;
+import com.Radiant_wizard.GastroManagementApp.entity.DTO.stockMovement.StockMovementDto;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.MovementType;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.Unit;
 import com.Radiant_wizard.GastroManagementApp.entity.model.StockMovement;
 import org.springframework.stereotype.Repository;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class StockMovementDaoImpl implements StockMovementDao{
+public class StockMovementDaoImpl implements StockMovementDao {
     private final Datasource datasource;
 
-    public StockMovementDaoImpl(Datasource datasource){
+    public StockMovementDaoImpl(Datasource datasource) {
         this.datasource = datasource;
     }
 
@@ -47,8 +46,24 @@ public class StockMovementDaoImpl implements StockMovementDao{
     }
 
     @Override
-    public void save(List<StockMovement> stockMovements) {
+    public void save(List<StockMovementDto> stockMovements, long ingredientId) {
         String sql =
-                "INSERT INTO stock_movement (ingredient_id, movement_type, quantity, unit, movement_date) VALUES(?, ?::stock_movement_type, ?, ?:: measurement_unit, ?::timestamp)";
+                "INSERT INTO stock_movement (ingredient_id, movement_type, quantity, unit, movement_date) VALUES(?, ?::stock_movement_type, ?, ?::measurement_unit, ?::timestamp)";
+        try (Connection connection = datasource.getConnection();){
+            for (StockMovementDto stockMovement : stockMovements) {
+                try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                    preparedStatement.setLong(1, ingredientId);
+                    preparedStatement.setString(2, stockMovement.getMovementType().toString());
+                    preparedStatement.setDouble(3, stockMovement.getMovementQuantity());
+                    preparedStatement.setString(4, stockMovement.getUnit().toString());
+                    preparedStatement.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate()));
+                    preparedStatement.executeUpdate();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 }

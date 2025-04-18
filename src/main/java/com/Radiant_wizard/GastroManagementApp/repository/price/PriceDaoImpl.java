@@ -1,4 +1,4 @@
-package com.Radiant_wizard.GastroManagementApp.repository;
+package com.Radiant_wizard.GastroManagementApp.repository.price;
 
 import com.Radiant_wizard.GastroManagementApp.configuration.Datasource;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Price;

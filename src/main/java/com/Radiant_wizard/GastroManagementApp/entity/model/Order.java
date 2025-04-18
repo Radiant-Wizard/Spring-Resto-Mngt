@@ -17,7 +17,6 @@ public class Order {
     private final long orderID;
     private final String reference;
     private List<DishOrder> orderedDish;
-    @JsonIgnore
     private List<Status> status;
 
     public Order(long orderID, String reference) {

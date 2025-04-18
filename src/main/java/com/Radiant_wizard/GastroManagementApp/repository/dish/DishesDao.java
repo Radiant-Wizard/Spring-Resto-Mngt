@@ -1,4 +1,4 @@
-package com.Radiant_wizard.GastroManagementApp.repository;
+package com.Radiant_wizard.GastroManagementApp.repository.dish;
 
 import com.Radiant_wizard.GastroManagementApp.entity.model.Criteria;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Dish;

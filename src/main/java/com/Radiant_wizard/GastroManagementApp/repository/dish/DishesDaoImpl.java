@@ -1,10 +1,11 @@
-package com.Radiant_wizard.GastroManagementApp.repository;
+package com.Radiant_wizard.GastroManagementApp.repository.dish;
 
 import com.Radiant_wizard.GastroManagementApp.configuration.Datasource;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.LogicalOperator;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.Unit;
 import com.Radiant_wizard.GastroManagementApp.entity.model.*;
 import com.Radiant_wizard.GastroManagementApp.mapper.DishMapper;
+import com.Radiant_wizard.GastroManagementApp.repository.stockMovement.StockMovementDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -58,7 +59,7 @@ public class DishesDaoImpl implements DishesDao {
     private List<Ingredient> getIngredientForDishes(long dishId) {
         List<Ingredient> ingredients = new ArrayList<>();
         String sqlForIngredient =
-                "select dish_id, ingredient_id, ingredient_name, last_modification, unit, unit_price,quantity from dishes_with_ingredients where dish_id = ? ";
+                "select di.dish_id, di.ingredient_id, di.quantity, i.ingredient_name, i.unit from dish_ingredients di JOIN ingredients i on i.ingredient_id = di.ingredient_id where dish_id = ? ";
 
         try (Connection connection = datasource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlForIngredient)) {

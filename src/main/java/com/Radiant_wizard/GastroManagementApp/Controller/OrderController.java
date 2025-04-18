@@ -2,6 +2,11 @@ package com.Radiant_wizard.GastroManagementApp.Controller;
 
 import com.Radiant_wizard.GastroManagementApp.Service.Order.OrderService;
 import com.Radiant_wizard.GastroManagementApp.Service.Order.OrderServiceImpl;
+import com.Radiant_wizard.GastroManagementApp.Service.Status.DishStatusServiceImpl;
+import com.Radiant_wizard.GastroManagementApp.entity.DTO.dish.OrderDish;
+import com.Radiant_wizard.GastroManagementApp.entity.DTO.order.OrderDto;
+import com.Radiant_wizard.GastroManagementApp.entity.Enum.StatusType;
+import com.Radiant_wizard.GastroManagementApp.entity.model.DishOrder;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +21,14 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private DishStatusServiceImpl dishStatusService;
+
+
     @GetMapping("/{reference}")
     public ResponseEntity<Object> getOrderByRef(@PathVariable ("reference") String reference ){
-        Order order = orderService.getOrderByRef(reference);
+        OrderDto order = orderService.getOrderByRef(reference);
         return ResponseEntity.ok(order);
     }
 
@@ -33,5 +43,26 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
         }
     }
+
+    @PutMapping("/{reference}/dishes")
+    public ResponseEntity<Object> addDishes(@PathVariable("reference") String reference, @RequestBody List<OrderDish> dishOrders){
+        try {
+            OrderDto orderDto = orderService.addDishesToOrder(dishOrders, reference);
+            return ResponseEntity.ok(orderDto);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
+    }
+
+    @PutMapping("/{reference}/dishes/{dishId}")
+    public ResponseEntity<Object> updateDishStatus(@PathVariable("reference") String reference, @PathVariable("dishId") long dishId, @RequestBody StatusType status){
+        try {
+            OrderDto orderDto = dishStatusService.updateDishStatus(status, dishId, reference);
+            return ResponseEntity.ok(orderDto);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
+    }
+
 
 }

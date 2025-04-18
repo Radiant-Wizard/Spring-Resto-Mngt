@@ -1,4 +1,4 @@
-package com.Radiant_wizard.GastroManagementApp.repository;
+package com.Radiant_wizard.GastroManagementApp.repository.order;
 
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.StatusType;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Order;

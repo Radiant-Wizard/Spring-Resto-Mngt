@@ -1,13 +1,14 @@
 package com.Radiant_wizard.AttendanceRecordApp;
 
+import com.Radiant_wizard.GastroManagementApp.AttendanceRecordAppApplication;
 import com.Radiant_wizard.GastroManagementApp.configuration.Datasource;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.LogicalOperator;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.Unit;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Criteria;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Dish;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient;
-import com.Radiant_wizard.GastroManagementApp.repository.DishesDaoImpl;
-import org.junit.jupiter.api.BeforeEach;
+import com.Radiant_wizard.GastroManagementApp.entity.model.Price;
+import com.Radiant_wizard.GastroManagementApp.repository.dish.DishesDaoImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest(classes = AttendanceRecordAppApplication.class)
 public class DishDaoImplTest {
     @Autowired
     Datasource datasource;
@@ -35,26 +36,26 @@ public class DishDaoImplTest {
         assertEquals(5500, dish.getTotalCostIngredient(LocalDateTime.now()));
     }
 
-//    @Test
-//    public void testCreateDishesWithoutHotdog() throws SQLException, IllegalAccessException {
-//        List<Ingredient> ingredients = List.of(
-//                new Ingredient(1L, "tomato", LocalDateTime.now(), Unit.G, List.of()),
-//                new Ingredient(2L, "Chicken Breast", LocalDateTime.now(), Unit.G, List.of(), List.of()),
-//                new Ingredient(3L, "Lettuce", LocalDateTime.now(), Unit.G, List.of(), List.of())
-//        );
-//        // Prepare a dish
-//        Dish dish = new Dish(17L, "Burger", 5000, ingredients);
-//
-//        // Create the dish in the database
-//        dishesDao.saveDishes(List.of(dish));
-//
-//        // Verify the dish was correctly inserted into the database
-//        Dish retrievedDish = dishesDao.getDishesById(17);
-//        assertNotNull(retrievedDish);
-//        assertEquals(17, retrievedDish.getDishId());
-//        assertEquals("Burger", retrievedDish.getDishName());
-//        assertEquals(5000, retrievedDish.getPrice());
-//    }
+    @Test
+    public void testCreateDishes() throws SQLException, IllegalAccessException {
+        List<Ingredient> ingredients = List.of(
+                new Ingredient(1L, "tomato", Unit.G, List.of(new Price(LocalDateTime.now(), 20.0)), List.of()),
+                new Ingredient(2L, "Chicken Breast", Unit.G, List.of(new Price(LocalDateTime.now(), 100.0)), List.of()),
+                new Ingredient(3L, "Lettuce", Unit.G, List.of(new Price(LocalDateTime.now(), 30.0)), List.of())
+        );
+        // Prepare a dish
+        Dish dish = new Dish(2L, "Burger", 5000, ingredients);
+
+        // Create the dish in the database
+        dishesDao.saveDishes(List.of(dish));
+
+        // Verify the dish was correctly inserted into the database
+        Dish retrievedDish = dishesDao.getDishesById(2);
+        assertNotNull(retrievedDish);
+        assertEquals(2, retrievedDish.getDishId());
+        assertEquals("Burger", retrievedDish.getDishName());
+        assertEquals(5000, retrievedDish.getPrice());
+    }
 
     @Test
     public void testGetAvailable() throws SQLException, IllegalAccessException {
@@ -76,4 +77,6 @@ public class DishDaoImplTest {
 
         assertEquals(1, dishes.size());
     }
+
+
 }

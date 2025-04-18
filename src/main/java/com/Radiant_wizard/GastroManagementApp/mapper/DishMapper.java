@@ -1,13 +1,17 @@
 package com.Radiant_wizard.GastroManagementApp.mapper;
 
 import com.Radiant_wizard.GastroManagementApp.entity.DTO.dish.DishIngredient;
+import com.Radiant_wizard.GastroManagementApp.entity.DTO.dish.OrderDish;
 import com.Radiant_wizard.GastroManagementApp.entity.DTO.ingredient.IngredientBasicProperty;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Dish;
+import com.Radiant_wizard.GastroManagementApp.entity.model.DishOrder;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient;
+import com.Radiant_wizard.GastroManagementApp.entity.model.Order;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,13 +42,30 @@ public class DishMapper {
                                         ingredient.getNeededQuantity(),
                                         ingredient.getUnit(),
                                         new IngredientBasicProperty(
-                                                ingredient.getIngredientId()
-                                                , ingredient.getIngredientName()
-                                        )
+                                                ingredient.getIngredientId(),
+                                                ingredient.getIngredientName()
+                                        ),
+                                        ingredient.getAvailableQuantity(LocalDateTime.now())
                                 )).toList());
         dishResponse.setActualPrice(Double.valueOf(dish.getPrice()));
         dishResponse.setAvailableQuantity(dish.getAvailableQuantity());
         return dishResponse;
+    }
+
+    public OrderDish mapToOrderDish(DishOrder dishOrder) {
+        return new OrderDish(
+                dishOrder.getCommendedDish().getDishId(),
+                dishOrder.getCommendedDish().getDishName(),
+                dishOrder.getDishQuantityCommanded(),
+                dishOrder.getActualStatus()
+        );
+    }
+
+    public OrderDish mapToNoStatusOrderDish(DishOrder dishOrder) {
+        return new OrderDish(
+                dishOrder.getCommendedDish().getDishId(),
+                dishOrder.getDishQuantityCommanded()
+        );
     }
 
 }

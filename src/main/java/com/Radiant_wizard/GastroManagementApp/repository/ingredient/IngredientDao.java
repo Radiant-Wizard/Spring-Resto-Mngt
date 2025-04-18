@@ -1,4 +1,4 @@
-package com.Radiant_wizard.GastroManagementApp.repository;
+package com.Radiant_wizard.GastroManagementApp.repository.ingredient;
 
 import com.Radiant_wizard.GastroManagementApp.entity.DTO.ingredient.Ingredient;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Criteria;

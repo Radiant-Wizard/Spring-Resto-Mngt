@@ -1,10 +1,12 @@
-package com.Radiant_wizard.GastroManagementApp.repository;
+package com.Radiant_wizard.GastroManagementApp.repository.ingredient;
 
 import com.Radiant_wizard.GastroManagementApp.configuration.Datasource;
 import com.Radiant_wizard.GastroManagementApp.entity.DTO.ingredient.Ingredient;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Criteria;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.LogicalOperator;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.Unit;
+import com.Radiant_wizard.GastroManagementApp.repository.price.PriceDaoImpl;
+import com.Radiant_wizard.GastroManagementApp.repository.stockMovement.StockMovementDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

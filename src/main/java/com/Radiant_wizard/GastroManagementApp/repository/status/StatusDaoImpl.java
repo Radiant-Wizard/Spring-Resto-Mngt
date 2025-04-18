@@ -1,4 +1,4 @@
-package com.Radiant_wizard.GastroManagementApp.repository;
+package com.Radiant_wizard.GastroManagementApp.repository.status;
 
 import com.Radiant_wizard.GastroManagementApp.configuration.Datasource;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.StatusType;
@@ -81,7 +81,7 @@ public class StatusDaoImpl implements StatusDao{
 
     @Override
     public void insertStatusForDishOrder(long orderDishId, StatusType statusType) {
-        String sql = "INSERT INTO order_dish_status (order_dish_id,order_dish_status, order_dish_creation_date) values(?,?::statusType,?::TIMESTAMP);";
+        String sql = "INSERT INTO order_dish_status (order_dish_id, order_dish_status, order_dish_creation_date) values(?,?::statusType,?::TIMESTAMP);";
 
         try (Connection connection = datasource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)
