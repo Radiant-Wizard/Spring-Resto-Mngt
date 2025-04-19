@@ -1,5 +1,6 @@
 package com.Radiant_wizard.GastroManagementApp.entity.DTO.dish;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
