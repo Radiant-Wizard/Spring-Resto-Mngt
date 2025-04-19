@@ -44,6 +44,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void createOrder(Order order) {
+        try {
+            orderDao.createOrder(order);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public OrderDto addDishesToOrder(List<OrderDish> orderDishes, String reference) throws SQLException {
         Optional<Order> order = orderDao.getByReference(reference);
         if (order.isPresent()){

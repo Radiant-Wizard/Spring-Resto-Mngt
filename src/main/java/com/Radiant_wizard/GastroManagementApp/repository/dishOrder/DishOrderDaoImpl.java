@@ -102,11 +102,15 @@ public class DishOrderDaoImpl implements DishOrderDao {
             throw new RuntimeException("You can't do that");
         }
         if (statusType == StatusType.IN_PROGRESS){
+            statusDao.insertStatusForOrder(orderId, StatusType.IN_PROGRESS);
         }
 
         if (order.allTheDishesFinished()) {
             statusDao.insertStatusForOrder(orderId, StatusType.FINISHED);
             statusDao.insertStatusForOrder(orderId, StatusType.SERVED);
+            for (DishOrder dishOrder : order.getOrderedDish()){
+                statusDao.insertStatusForDishOrder(dishOrder.getDishOrderId(), StatusType.SERVED);
+            }
         }
     }
 

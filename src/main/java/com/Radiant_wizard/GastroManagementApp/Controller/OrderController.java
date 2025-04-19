@@ -38,17 +38,25 @@ public class OrderController {
             List<Order> orders = orderService.getAll(pageSize, pageNumber);
             return ResponseEntity.ok(orders);
         } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-
+    @PostMapping("/")
+    public ResponseEntity<Object> createOrder(@RequestBody Order order){
+        try {
+            orderService.createOrder(order);
+            return ResponseEntity.ok("Order created successfully");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
     @PutMapping("/{reference}/dishes")
     public ResponseEntity<Object> addDishes(@PathVariable("reference") String reference, @RequestBody List<OrderDish> dishOrders){
         try {
             OrderDto orderDto = orderService.addDishesToOrder(dishOrders, reference);
             return ResponseEntity.ok(orderDto);
         } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -58,7 +66,7 @@ public class OrderController {
             OrderDto orderDto = dishStatusService.updateDishStatus(status, dishId, reference);
             return ResponseEntity.ok(orderDto);
         } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 

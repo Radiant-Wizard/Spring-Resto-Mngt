@@ -101,11 +101,6 @@ public class IngredientServiceImpl implements IngredientService {
     public void addStockMovement(List<StockMovementDto> stockMovements, long ingredientId) {
         try {
             com.Radiant_wizard.GastroManagementApp.entity.model.Ingredient ingredient = ingredientDao.getIngredientById(ingredientId);
-            for (StockMovementDto stockMovementDto : stockMovements){
-                if (stockMovementDto.getMovementType() == MovementType.OUT && ingredient.getAvailableQuantity(LocalDateTime.now()) < stockMovementDto.getMovementQuantity()){
-                    throw new RuntimeException("Not enough available quantity for that transaction");
-                }
-            }
             stockMovementDao.save(stockMovements, ingredientId);
         } catch (Exception e) {
             throw new RuntimeException(e);

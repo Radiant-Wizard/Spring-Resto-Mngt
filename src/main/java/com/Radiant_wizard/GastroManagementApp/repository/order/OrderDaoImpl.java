@@ -117,7 +117,8 @@ public class OrderDaoImpl implements OrderDao{
 
     @Override
     public void createOrder(Order order) throws SQLException {
-        String sqlForOrders = "INSERT INTO orders (order_id, order_reference) VALUES (?, ?) ON CONFLICT DO NOTHING";
+        String sqlForOrders = "INSERT INTO orders (order_id, order_reference) VALUES (?, ?) ";
+
         try (Connection connection = datasource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sqlForOrders)) {
                 statement.setLong(1, order.getOrderID());

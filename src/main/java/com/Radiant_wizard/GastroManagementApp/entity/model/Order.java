@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @ToString
 public class Order {
-    private final long orderID;
+    private long orderID;
     private final String reference;
     private List<DishOrder> orderedDish;
     private List<Status> status;

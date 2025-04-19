@@ -12,5 +12,6 @@ import java.util.List;
 public class OrderDto {
     private final String reference;
     private final StatusType Status;
+    private final Double totalAmount;
     private final List<OrderDish> orderDish;
 }

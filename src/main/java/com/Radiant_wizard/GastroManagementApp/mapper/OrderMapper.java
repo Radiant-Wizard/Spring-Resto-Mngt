@@ -14,6 +14,7 @@ public class OrderMapper {
         return new OrderDto(
                 order.getReference(),
                 order.getActualStatus(),
+                order.getTotalAmount(),
                 order.getOrderedDish().stream().map(dishOrder -> dishMapper.mapToOrderDish(dishOrder)).toList()
         );
     }
