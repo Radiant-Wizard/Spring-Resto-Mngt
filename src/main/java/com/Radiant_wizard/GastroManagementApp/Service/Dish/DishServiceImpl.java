@@ -33,6 +33,15 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
+    public void saveDishes(List<com.Radiant_wizard.GastroManagementApp.entity.model.Dish> dish) {
+        try {
+            dishesDao.saveDishes(dish);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public List<Dish> getAllDishes(int pageSize, int pageNumber) {
         return dishesDao.getAll(pageSize, pageNumber).stream().map(dishMapper::dishDbToDish).toList();
     }

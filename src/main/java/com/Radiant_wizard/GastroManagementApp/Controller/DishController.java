@@ -37,6 +37,15 @@ public class DishController {
         }
     }
 
+    @PostMapping("/")
+    public ResponseEntity<Object> newDishes(@RequestBody List<com.Radiant_wizard.GastroManagementApp.entity.model.Dish> dishes){
+        try {
+            dishService.saveDishes(dishes);
+            return ResponseEntity.ok("The dishes has been saved successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
+    }
     @GetMapping("/{id}/processingTime")
     public ResponseEntity<Object> getProcessingTime(@PathVariable("id") long dishId,
                                                     @RequestParam LocalDateTime start,

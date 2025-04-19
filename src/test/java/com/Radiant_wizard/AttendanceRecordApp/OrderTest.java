@@ -1,6 +1,6 @@
 package com.Radiant_wizard.AttendanceRecordApp;
 
-import com.Radiant_wizard.GastroManagementApp.AttendanceRecordAppApplication;
+import com.Radiant_wizard.GastroManagementApp.GastroManagementApp;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.StatusType;
 import com.Radiant_wizard.GastroManagementApp.entity.model.DishOrder;
 import com.Radiant_wizard.GastroManagementApp.entity.model.Order;
@@ -12,13 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.swing.text.html.Option;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-@SpringBootTest(classes = AttendanceRecordAppApplication.class)
+@SpringBootTest(classes = GastroManagementApp.class)
 public class OrderTest {
     Logger logger = Logger.getLogger(OrderTest.class.getName());
 

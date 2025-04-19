@@ -1,6 +1,6 @@
 package com.Radiant_wizard.AttendanceRecordApp;
 
-import com.Radiant_wizard.GastroManagementApp.AttendanceRecordAppApplication;
+import com.Radiant_wizard.GastroManagementApp.GastroManagementApp;
 import com.Radiant_wizard.GastroManagementApp.configuration.Datasource;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.LogicalOperator;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.Unit;
@@ -22,7 +22,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest(classes = AttendanceRecordAppApplication.class)
+@SpringBootTest(classes = GastroManagementApp.class)
 public class DishDaoImplTest {
     @Autowired
     Datasource datasource;

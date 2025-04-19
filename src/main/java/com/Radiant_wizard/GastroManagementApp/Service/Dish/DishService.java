@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public interface DishService {
+    void saveDishes(List<com.Radiant_wizard.GastroManagementApp.entity.model.Dish> dish);
     List<Dish> getAllDishes(int pageSize, int pageNumber);
     double calculateProcessingTimeForDishOrders(long dishId, LocalDateTime start, LocalDateTime end, TimeUnit unit, Mode mode);
     Map<Long, DishOrder> dishOrderByDishId(long dishId, LocalDateTime start, LocalDateTime end);
