@@ -4,6 +4,3 @@ CREATE TABLE prices(
     last_modification timestamp without time zone,
     unit_price NUMERIC(10,2)
 );
-
-
-
