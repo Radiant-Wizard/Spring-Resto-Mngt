@@ -6,5 +6,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SaleDao {
-    List<Sale> getBestSale(int top, LocalDateTime from, LocalDateTime to);
+    List<Sale> getSale(LocalDateTime from, LocalDateTime to);
 }

@@ -21,7 +21,7 @@ public class SaleDaoImpl implements SaleDao{
     }
 
     @Override
-    public List<Sale> getBestSale(int top, LocalDateTime startTime, LocalDateTime endTime) {
+    public List<Sale> getSale(LocalDateTime startTime, LocalDateTime endTime) {
         String sql = """
                 SELECT
                     d.dish_name,
@@ -39,9 +39,6 @@ public class SaleDaoImpl implements SaleDao{
                     AND ods.order_dish_creation_date BETWEEN ?::TIMESTAMP AND ?::TIMESTAMP
                 GROUP BY
                     d.dish_name, d.dish_price
-                ORDER BY
-                    total_quantity_ordered DESC
-                LIMIT ?
                 """;
         List<Sale> sales = new ArrayList<>();
         try (Connection connection = datasource.getConnection();
@@ -49,7 +46,6 @@ public class SaleDaoImpl implements SaleDao{
         ){
             preparedStatement.setTimestamp(1, Timestamp.valueOf(startTime));
             preparedStatement.setTimestamp(2, Timestamp.valueOf(endTime));
-            preparedStatement.setInt(3, top);
             try (ResultSet resultSet = preparedStatement.executeQuery()){
                 while (resultSet.next()){
                     sales.add(new Sale(
