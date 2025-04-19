@@ -64,7 +64,6 @@ public class DishServiceImpl implements DishService {
 
                     inProgressStatus = null;
                 }
-
             }
         }
 
@@ -83,5 +82,14 @@ public class DishServiceImpl implements DishService {
             case HOURS -> result / 3600;
             default -> result;
         };
+    }
+
+    @Override
+    public Map<Long, DishOrder> dishOrderByDishId(long dishId, LocalDateTime start, LocalDateTime end){
+        try {
+            return dishOrderDao.dishOrderByDishId(dishId, start, end);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

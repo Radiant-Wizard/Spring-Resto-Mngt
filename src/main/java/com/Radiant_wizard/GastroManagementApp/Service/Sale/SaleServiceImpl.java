@@ -16,9 +16,15 @@ public class SaleServiceImpl implements SaleService{
     }
 
     @Override
-    public List<Sale> getBestSale(int top, LocalDateTime startTime, LocalDateTime endTime) {
+    public List<Sale> getSale(LocalDateTime startTime, LocalDateTime endTime) {
         try {
-            return saleDao.getBestSale(top, startTime, endTime);
+            List<Sale> sales = saleDao.getSale(startTime, endTime);
+            if (sales.isEmpty()){
+                throw new RuntimeException("not found");
+            } else {
+                System.out.println(sales);
+                return sales;
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
