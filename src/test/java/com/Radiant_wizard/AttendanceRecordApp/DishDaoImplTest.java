@@ -39,9 +39,9 @@ public class DishDaoImplTest {
     @Test
     public void testCreateDishes() throws SQLException, IllegalAccessException {
         List<Ingredient> ingredients = List.of(
-                new Ingredient(1L, "tomato", Unit.G, List.of(new Price(LocalDateTime.now(), 20.0)), List.of()),
-                new Ingredient(2L, "Chicken Breast", Unit.G, List.of(new Price(LocalDateTime.now(), 100.0)), List.of()),
-                new Ingredient(3L, "Lettuce", Unit.G, List.of(new Price(LocalDateTime.now(), 30.0)), List.of())
+                new Ingredient(1L, "tomato", Unit.G, List.of(new Price(LocalDateTime.now(), 20.0)), 12.0),
+                new Ingredient(2L, "Chicken Breast", Unit.G, List.of(new Price(LocalDateTime.now(), 100.0)), 250.0),
+                new Ingredient(3L, "Lettuce", Unit.G, List.of(new Price(LocalDateTime.now(), 30.0)), 100.0)
         );
         // Prepare a dish
         Dish dish = new Dish(2L, "Burger", 5000, ingredients);

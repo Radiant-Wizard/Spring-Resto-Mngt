@@ -5,6 +5,7 @@ import com.Radiant_wizard.GastroManagementApp.entity.Enum.LogicalOperator;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.Unit;
 import com.Radiant_wizard.GastroManagementApp.entity.model.*;
 import com.Radiant_wizard.GastroManagementApp.mapper.DishMapper;
+import com.Radiant_wizard.GastroManagementApp.repository.price.PriceDaoImpl;
 import com.Radiant_wizard.GastroManagementApp.repository.stockMovement.StockMovementDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,16 +23,18 @@ public class DishesDaoImpl implements DishesDao {
     private final Datasource datasource;
     private final StockMovementDaoImpl stockMovementDao;
     private final DishMapper dishMapper;
+    private final PriceDaoImpl priceDao;
 
     @Autowired
     public DishesDaoImpl(
             Datasource datasource,
             StockMovementDaoImpl stockMovementDao,
-            DishMapper dishMapper
+            DishMapper dishMapper, PriceDaoImpl priceDao
     ) {
         this.datasource = datasource;
         this.stockMovementDao = stockMovementDao;
         this.dishMapper = dishMapper;
+        this.priceDao = priceDao;
     }
     private List<Price> getPricesForIngredient(long ingredientId) {
         List<Price> prices = new ArrayList<>();
@@ -214,7 +217,11 @@ public class DishesDaoImpl implements DishesDao {
                         throw new SQLException(e);
                     }
                 }
+
+
             }
+
+
         }
 
     }

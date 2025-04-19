@@ -106,6 +106,7 @@ public class DishOrderDaoImpl implements DishOrderDao {
 
         if (order.allTheDishesFinished()) {
             statusDao.insertStatusForOrder(orderId, StatusType.FINISHED);
+            statusDao.insertStatusForOrder(orderId, StatusType.SERVED);
         }
     }
 

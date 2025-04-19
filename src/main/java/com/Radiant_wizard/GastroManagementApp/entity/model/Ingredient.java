@@ -3,6 +3,7 @@ package com.Radiant_wizard.GastroManagementApp.entity.model;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.MovementType;
 import com.Radiant_wizard.GastroManagementApp.entity.Enum.Unit;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -10,18 +11,25 @@ import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 
+@NoArgsConstructor
 @Getter
 @Setter
 public class Ingredient {
-    private final Long ingredientId;
-    private final String ingredientName;
-    private final Unit unit;
+    private Long ingredientId;
+    private String ingredientName;
+    private Unit unit;
     private double neededQuantity;
-    private final List<Price> unitPrice;
-    private final List<StockMovement> stockMovements;
+    private List<Price> unitPrice;
+    private List<StockMovement> stockMovements;
 
+    public Ingredient(Long ingredientId, String ingredientName, Unit unit, double neededQuantity) {
+        this.ingredientId = ingredientId;
+        this.ingredientName = ingredientName;
+        this.unit = unit;
+        this.neededQuantity = neededQuantity;
+    }
 
-    public Ingredient(Long ingredientId, String ingredientName,Unit unit, List<Price> unitPrice, List<StockMovement> stockMovements) {
+    public Ingredient(Long ingredientId, String ingredientName, Unit unit, List<Price> unitPrice, List<StockMovement> stockMovements) {
         this.ingredientId = ingredientId;
         this.ingredientName = ingredientName;
         this.unit = unit;
@@ -36,6 +44,14 @@ public class Ingredient {
         this.unitPrice = unitPrice;
         this.neededQuantity = neededQuantity;
         this.stockMovements = stockMovements;
+    }
+
+    public Ingredient(Long ingredientId, String ingredientName, Unit unit, List<Price> unitPrice, double neededQuantity) {
+        this.ingredientId = ingredientId;
+        this.ingredientName = ingredientName;
+        this.unit = unit;
+        this.unitPrice = unitPrice;
+        this.neededQuantity = neededQuantity;
     }
 
     public Price getNearestPrice(LocalDateTime localDateTime) {
