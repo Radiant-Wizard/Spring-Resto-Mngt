@@ -6,5 +6,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SaleService {
-    List<Sale> getBestSale(int top, LocalDateTime startTime, LocalDateTime endTime);
+    List<Sale> getSale(LocalDateTime startTime, LocalDateTime endTime);
 }
